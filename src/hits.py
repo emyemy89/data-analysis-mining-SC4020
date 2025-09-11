@@ -1,25 +1,22 @@
-###
-# HITS will give two scores per node (hub and authority) 
-# showing different roles in the  network
-###
-
-import json
 import networkx as nx
 
-# Load JSON dataset
-with open('datasets/citation_network.json') as f:
-    data = json.load(f)
+# Load undirected graph from the edge list
+G = nx.read_edgelist("../datasets/facebook_combined.txt", create_using=nx.Graph(), nodetype=int)
 
-# Create directed graph
-G = nx.DiGraph()
-for node in data['nodes']:
-    G.add_node(node['id'], label=node.get('label'))
-for edge in data['edges']:
-    G.add_edge(edge['source'], edge['target'])
+# HITS requires a directed graph
+G = G.to_directed()
 
 # Compute HITS scores
 hubs, authorities = nx.hits(G, max_iter=100, normalized=True)
 
-# Print results
-print("Hub scores:", hubs)
-print("Authority scores:", authorities)
+# Print top 10 hubs
+print("Top Hub Scores:")
+top_hubs = sorted(hubs.items(), key=lambda x: x[1], reverse=True)[:10]
+for node, score in top_hubs:
+    print(f"Node {node}: Hub Score = {score:.5f}")
+
+# Print top 10 authorities
+print("\nTop Authority Scores:")
+top_auths = sorted(authorities.items(), key=lambda x: x[1], reverse=True)[:10]
+for node, score in top_auths:
+    print(f"Node {node}: Authority Score = {score:.5f}")
