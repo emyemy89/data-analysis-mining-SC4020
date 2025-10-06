@@ -1,0 +1,1 @@
+<title>Animals</title><text>#REDIRECT [[Animal]] {{R from plural}}</text>

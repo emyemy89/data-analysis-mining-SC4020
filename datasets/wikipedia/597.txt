@@ -1,0 +1,1 @@
+<title>MediaWiki:Noarticletext</title><text><div style="border: 1px solid #ccc; padding: 7px; background: white;"> {{#ifexist: MediaWiki:Noarticletext_NS_{{NAMESPACE}} | {{MediaWiki:Noarticletext_NS_{{NAMESPACE}}}} | {{MediaWiki:Noarticletext_NS_Other}} }} </div></text>

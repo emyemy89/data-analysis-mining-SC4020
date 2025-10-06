@@ -1,0 +1,1 @@
+<title>Linear Algebra</title><text>#REDIRECT [[Linear_algebra]] </text>

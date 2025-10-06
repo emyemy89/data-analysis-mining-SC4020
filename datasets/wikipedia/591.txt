@@ -1,0 +1,1 @@
+<title>MediaWiki:Passwordremindertitle</title><text>Password reminder from Simple English Wikipedia</text>

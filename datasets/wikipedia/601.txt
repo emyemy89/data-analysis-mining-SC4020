@@ -1,0 +1,1 @@
+<title>MediaWiki:Searchingwikipedia</title><text>Searching Wikipedia</text>

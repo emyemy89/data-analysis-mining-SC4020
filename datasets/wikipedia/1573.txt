@@ -1,0 +1,1 @@
+<title>MediaWiki:Tooltip-sitesupport</title><text>Support Wikimedia</text>

@@ -1,0 +1,1 @@
+<title>MediaWiki:Showhideminor</title><text>$1 small changes | $2 bots | $3 logged in users</text>

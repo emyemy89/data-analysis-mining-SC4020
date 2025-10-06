@@ -1,0 +1,1 @@
+<title>Buy</title><text>#redirect [[trade]]</text>

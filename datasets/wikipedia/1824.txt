@@ -1,0 +1,1 @@
+<title>Click</title><text>{{wiktionary}} '''Click''' is an [[wikt:onomatopoeia|onomatopoeia]]. It is sometimes used to indicate pressing the button on a [[computer mouse]].  {{tech-stub}} [[Category:Computing]]</text>

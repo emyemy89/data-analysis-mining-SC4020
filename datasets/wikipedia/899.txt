@@ -1,0 +1,1 @@
+<title>Wikipedia:The perfect stub article</title><text>#redirect [[Wikipedia:Stub]]</text>

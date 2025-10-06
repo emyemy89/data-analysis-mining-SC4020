@@ -1,0 +1,1 @@
+<title>MediaWiki:Savedprefs</title><text>Your settings have been saved.</text>

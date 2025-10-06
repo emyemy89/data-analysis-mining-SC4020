@@ -1,0 +1,1 @@
+<title>MediaWiki:Loginsuccess</title><text>You are now logged in to the Simple English Wikipedia as "$1".</text>

@@ -1,0 +1,1 @@
+<title>MediaWiki:Autoblocker</title><text>You have been autoblocked because your IP address was recently used by [[User:$1|$1]].  The reason for $1's block is: $2</text>

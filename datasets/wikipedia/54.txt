@@ -1,0 +1,1 @@
+<title>Bootstrap</title><text>#REDIRECT [[boot]] </text>

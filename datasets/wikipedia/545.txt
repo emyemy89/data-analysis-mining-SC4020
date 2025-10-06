@@ -1,0 +1,1 @@
+<title>Weblog</title><text>#REDIRECT [[blog]] </text>

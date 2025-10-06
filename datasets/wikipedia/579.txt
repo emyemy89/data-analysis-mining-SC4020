@@ -1,0 +1,1 @@
+<title>MediaWiki:Printableversion</title><text>Page for printing</text>

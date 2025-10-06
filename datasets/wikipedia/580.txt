@@ -1,0 +1,1 @@
+<title>MediaWiki:Talkpage</title><text>Talk about this page</text>

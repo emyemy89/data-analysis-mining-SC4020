@@ -1,0 +1,1 @@
+<title>Logical</title><text>#redirect [[logic]]</text>

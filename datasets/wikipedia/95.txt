@@ -1,0 +1,1 @@
+<title>Countries</title><text>#REDIRECT [[Country]] {{R from plural}}</text>

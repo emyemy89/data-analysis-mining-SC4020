@@ -1,0 +1,1 @@
+<title>MediaWiki:Recentchangestext</title><text>{{Wikipedia:RecentChanges}}</text>

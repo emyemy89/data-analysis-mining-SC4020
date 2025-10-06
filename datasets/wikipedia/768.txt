@@ -1,0 +1,1 @@
+<title>Hyperlink</title><text>#REDIRECT [[Link]]</text>

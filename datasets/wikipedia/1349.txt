@@ -1,0 +1,1 @@
+<title>Wikipedia:How to revert a page to an earlier version</title><text>#REDIRECT [[Help:Revert a page]]</text>

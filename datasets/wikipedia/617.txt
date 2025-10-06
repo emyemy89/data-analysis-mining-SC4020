@@ -1,0 +1,1 @@
+<title>MediaWiki:Revertpage</title><text>[[Help:Revert a page|Reverted]] edits by [[Special:Contributions/$2|$2]] ([[User talk:$2|talk]]) to last version by $1</text>

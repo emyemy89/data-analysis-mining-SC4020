@@ -1,0 +1,1 @@
+<title>Sports</title><text>#REDIRECT [[Sport]] {{R from plural}}</text>

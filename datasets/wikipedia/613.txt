@@ -1,0 +1,1 @@
+<title>MediaWiki:Randompage</title><text>Show any page</text>

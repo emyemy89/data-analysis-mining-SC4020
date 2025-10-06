@@ -1,0 +1,1 @@
+<title>MediaWiki:Searchresulttext</title><text>For more information about searching Wikipedia, see  [[:en:Wikipedia:Searching|Wikipedia:Searching]] (on the English Wikipedia).</text>

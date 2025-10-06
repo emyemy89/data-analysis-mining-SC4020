@@ -1,0 +1,1 @@
+<title>MediaWiki:Blocklistline</title><text>$1, $2 blocked $3 ($4)</text>

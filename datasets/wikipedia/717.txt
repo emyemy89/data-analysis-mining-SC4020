@@ -1,0 +1,1 @@
+<title>Wikipedia:MediaWiki namespace text</title><text>#REDIRECT [[Special:Allmessages]]</text>

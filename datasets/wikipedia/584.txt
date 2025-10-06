@@ -1,0 +1,1 @@
+<title>MediaWiki:Nosuchactiontext</title><text>Wiki does not know this URL you tried.</text>

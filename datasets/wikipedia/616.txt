@@ -1,0 +1,1 @@
+<title>MediaWiki:Watchlist</title><text>My watchlist</text>

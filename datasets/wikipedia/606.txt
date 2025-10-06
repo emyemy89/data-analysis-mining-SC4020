@@ -1,0 +1,1 @@
+<title>MediaWiki:Prefslogintext</title><text>You are logged in as "$1". Your internal ID number is $2.  See [[Help:User preferences]] for help.</text>

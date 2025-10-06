@@ -1,0 +1,1 @@
+<title>MediaWiki:Protectedtext</title><text>#REDIRECT [[MediaWiki:Protectedpagetext]]</text>

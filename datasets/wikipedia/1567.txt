@@ -1,0 +1,1 @@
+<title>MediaWiki:Edit</title><text>change this page</text>

@@ -1,0 +1,1 @@
+<title>Global</title><text>#redirect [[globe]]</text>

@@ -1,0 +1,1 @@
+<title>Template:Pdelete</title><text>#REDIRECT [[Template:RfD]]</text>

@@ -1,0 +1,1 @@
+<title>MediaWiki:Yourpasswordagain</title><text>Type password again:</text>

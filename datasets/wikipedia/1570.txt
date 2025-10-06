@@ -1,0 +1,1 @@
+<title>MediaWiki:Poweredby</title><text>Wikipedia is powered by [//www.mediawiki.org/ MediaWiki], an open source wiki engine.</text>

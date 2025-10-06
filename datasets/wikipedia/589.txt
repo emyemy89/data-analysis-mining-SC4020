@@ -1,0 +1,1 @@
+<title>MediaWiki:Loginsuccesstitle</title><text>You have logged in</text>

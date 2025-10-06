@@ -1,0 +1,1 @@
+<title>Cities</title><text>#REDIRECT [[City]] {{R from plural}}</text>

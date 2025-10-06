@@ -1,0 +1,1 @@
+<title>Template:Unsimple</title><text>#REDIRECT [[Template:complex]]</text>

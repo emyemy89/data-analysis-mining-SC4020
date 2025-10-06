@@ -1,0 +1,1 @@
+<title>MediaWiki:Mailnologintext</title><text>You must be [[Special:Userlogin|logged in]] and have a working e-mail address in your [[Special:Preferences|settings]] to send e-mail to other users.</text>

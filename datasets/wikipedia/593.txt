@@ -1,0 +1,1 @@
+<title>MediaWiki:Summary</title><text><span style="text-align: left;">[[Wikipedia:Change summary|Change summary]] <small>(Briefly describe the changes you have made here)</small></span></text>

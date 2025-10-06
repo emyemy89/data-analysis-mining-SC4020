@@ -1,0 +1,1 @@
+<title>Width</title><text>'''Width''' or '''breadth''' is the side-to-side length, measuring across the object at right angles to the height.  For example, the distance between the left side and right side of a [[chair]] is its width.  ==Related pages== *[[Height]] *[[Depth]]    {{physics-stub}}  [[Category:Physical quantity]]</text>

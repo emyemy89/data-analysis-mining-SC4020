@@ -1,0 +1,1 @@
+<title>Template:Colors</title><text>#REDIRECT [[Template:Font color]]  {{Redirect category shell| {{R from template shortcut}} }}</text>

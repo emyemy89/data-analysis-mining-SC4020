@@ -1,0 +1,1 @@
+<title>Web Site</title><text>#REDIRECT [[website]] </text>

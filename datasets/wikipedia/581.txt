@@ -1,0 +1,1 @@
+<title>MediaWiki:Lastmodified</title><text>This page was last changed at $1.</text>
