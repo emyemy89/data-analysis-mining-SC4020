@@ -1,7 +1,7 @@
 import networkx as nx
 
 # Load the undirected graph from the file
-G = nx.read_edgelist("../datasets/facebook_combined.txt", create_using=nx.Graph(), nodetype=int)
+G = nx.read_edgelist("../datasets/social_graph.txt", create_using=nx.DiGraph(), nodetype=int)
 
 # Convert to directed for PageRank (optional, PageRank works on both)
 G = G.to_directed()

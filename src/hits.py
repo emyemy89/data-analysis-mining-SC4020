@@ -1,7 +1,8 @@
 import networkx as nx
 
 # Load undirected graph from the edge list
-G = nx.read_edgelist("../datasets/facebook_combined.txt", create_using=nx.Graph(), nodetype=int)
+G = nx.read_edgelist("../datasets/social_graph.txt", create_using=nx.DiGraph(), nodetype=int)
+
 
 # HITS requires a directed graph
 G = G.to_directed()
