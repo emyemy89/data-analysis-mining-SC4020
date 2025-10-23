@@ -64,7 +64,7 @@ def apriori (min_support, transactions):
         # 2. prune those below threshold
         support=count/len(transactions)
         if support>= min_support:
-          freq_items_Lnext[frozenset([i])]= support
+          freq_items_Lnext[i]= support
         #print(freq_items_Ln)
       freq_items_Ln = freq_items_Lnext
       all_frequent_items.update(freq_items_Ln)
@@ -81,7 +81,25 @@ def apriori (min_support, transactions):
 
 
     # return list of frequent itemsets with support values
-    return all_frequent_items
+    #return all_frequent_items
+    return dict(sorted(all_frequent_items.items(), key=lambda x: (len(x[0]), -x[1]))) #return sorted itemsets instead
+
+def make_rules(frequent_itemsets, min_confidence):
+  rules = []
+  for itemset, supp in frequent_itemsets.items():
+      if len(itemset) >= 2:
+          for prev in itertools.chain.from_iterable(
+              itertools.combinations(itemset, r) for r in range(1, len(itemset))
+          ):
+              prev = frozenset(prev)
+              consequent = itemset - prev
+              if consequent:
+                  conf = supp / frequent_itemsets.get(prev, 1)
+                  if conf >= min_confidence:
+                      rules.append((prev, consequent, supp, conf))
+  return rules
+
+
 
 
 result = apriori(0.1, transactions)
