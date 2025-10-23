@@ -59,7 +59,7 @@ def apriori (min_support, transactions):
         for j in transactions:
           if(i.issubset(j)):
             count+=1
-        # 2. prune those below threshold
+        # 2. prune those below threshold # moved inside the iterative logic
         support=count/len(transactions)
         if support>= min_support:
           freq_items_Lnext[i]= support
