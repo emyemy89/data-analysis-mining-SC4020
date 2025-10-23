@@ -7,6 +7,11 @@ print(df.columns)
 df['Symptoms'] = df['Symptoms'].apply(lambda x: x.split(';'))
 transactions= df['Symptoms'].tolist()
 
+min_transactions = 1000 # if too few transactions, mirror them
+if len(transactions) < min_transactions:
+    transactions = transactions * (min_transactions // len(transactions) + 1)
+
+
 # print(f"Total transactions: {len(transactions)}")
 # print("Example transaction:", transactions[0])
 
