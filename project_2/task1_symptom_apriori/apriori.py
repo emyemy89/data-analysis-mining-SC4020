@@ -103,7 +103,12 @@ def make_rules(frequent_itemsets, min_confidence):
 
 
 result = apriori(0.1, transactions)
-print(f"Number of frequent itemsets: {len(result)}")
-for items, support in result.items():
-    print(set(items), ":", round(support, 3))
 
+# print(f"Number of frequent itemsets: {len(result)}")
+# for items, support in result.items():
+#     print(set(items), ":", round(support, 3))
+
+rules = make_rules(result, min_confidence=0.7)
+print(f"Number of rules: {len(rules)}")
+for antecedent, consequent, support, confidence in rules:
+    print(f"{set(antecedent)} -> {set(consequent)}, support: {round(support,3)}, confidence: {round(confidence,3)}")
