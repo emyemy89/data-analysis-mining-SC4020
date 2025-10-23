@@ -1,4 +1,5 @@
 import pandas as pd
+import itertools
 
 df = pd.read_csv("../data/cleaned/dataset_cleaned.csv")
 print(df.columns)
@@ -30,23 +31,61 @@ def apriori (min_support, transactions):
     item_supp={}
 
     for i, count in all_items.items():
-      supp= count/num_tx
-      item_supp[i]=supp
+      support= count/num_tx
+      item_supp[i]=support
       #print(i, count, supp) # to print the support
     
   
 
-    # 2. prune those below threshold
+
+    # 3. iteratively build larger itemsets
     freq_items_L1={}
     for i in item_supp:
       if(item_supp[i]>= min_support):
         freq_items_L1[frozenset([i])]= item_supp[i]
-    print(freq_items_L1)
+    freq_items_Ln=freq_items_L1.copy()
+    all_frequent_items = dict(freq_items_L1) # all itemsets discovered
+    n=2
+    still_candidates= True
+    while still_candidates:
+      #candidates= itertools.combinations(list(freq_items_Ln.keys()),n)
+      prev_freq = list(freq_items_Ln.keys())
+      candidates = []
+      for a, b in itertools.combinations(prev_freq, 2):
+        merged = a.union(b)
+        if len(merged) == n:  # only keep itemsets of size n
+          candidates.append(merged)
+      freq_items_Lnext = {}
+      for i in candidates:
+        count=0
+        for j in transactions:
+          if(i.issubset(j)):
+            count+=1
+        # 2. prune those below threshold
+        support=count/len(transactions)
+        if support>= min_support:
+          freq_items_Lnext[frozenset([i])]= support
+        #print(freq_items_Ln)
+      freq_items_Ln = freq_items_Lnext
+      all_frequent_items.update(freq_items_Ln)
 
-    # 3. iteratively build larger itemsets
-    while():
+
+
       
 
-    # return list of frequent itemsets with support values
+      #check if there are still new candidates
+      if freq_items_Ln:          #if not empty
+        n+=1
+      else: still_candidates= False
 
-apriori(0.2, transactions)
+
+
+    # return list of frequent itemsets with support values
+    return all_frequent_items
+
+
+result = apriori(0.1, transactions)
+print(f"Number of frequent itemsets: {len(result)}")
+for items, support in result.items():
+    print(set(items), ":", round(support, 3))
+
