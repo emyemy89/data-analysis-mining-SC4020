@@ -12,32 +12,25 @@ transactions= df['Symptoms'].tolist()
 
 def apriori (min_support, transactions):
     # 1. count individual items
-    
     all_symptoms=set()
     for i in transactions:
       all_symptoms.update(i)
     #print(all_symptoms)
-
     all_items={}
     for i in all_symptoms:
       count=0
       for j in transactions:
         if i in j:
           count+=1
-      all_items[i]=count
-    
+      all_items[i]=count   
     # convert count to support
     num_tx= len(transactions)
     item_supp={}
-
     for i, count in all_items.items():
       support= count/num_tx
       item_supp[i]=support
       #print(i, count, supp) # to print the support
     
-  
-
-
     # 3. iteratively build larger itemsets
     freq_items_L1={}
     for i in item_supp:
@@ -69,16 +62,10 @@ def apriori (min_support, transactions):
       freq_items_Ln = freq_items_Lnext
       all_frequent_items.update(freq_items_Ln)
 
-
-
-      
-
       #check if there are still new candidates
       if freq_items_Ln:          #if not empty
         n+=1
       else: still_candidates= False
-
-
 
     # return list of frequent itemsets with support values
     #return all_frequent_items
@@ -98,8 +85,6 @@ def make_rules(frequent_itemsets, min_confidence):
                   if conf >= min_confidence:
                       rules.append((prev, consequent, supp, conf))
   return rules
-
-
 
 
 result = apriori(0.1, transactions)
