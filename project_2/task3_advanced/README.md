@@ -68,7 +68,7 @@ Access at: `http://localhost:5000`
 ## Project Files
 
 ### Core Application Files
-- **app.py** - Flask REST API server (✅ Fixed all bugs)
+- **app.py** - Flask REST API server (Fixed all bugs)
 - **train-models-script.py** - ML model training
 - **frontend/** - React web application
 - **models/** - Trained ML models (generated)
