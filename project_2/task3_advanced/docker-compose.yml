@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: health-assistant-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./models:/app/models
+      - ./*.csv:/app/*.csv:ro
+    environment:
+      - FLASK_ENV=production
+      - PYTHONUNBUFFERED=1
+    networks:
+      - health-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: health-assistant-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - REACT_APP_API_URL=http://localhost:5000/api
+    networks:
+      - health-network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+networks:
+  health-network:
+    driver: bridge
+
+volumes:
+  models:

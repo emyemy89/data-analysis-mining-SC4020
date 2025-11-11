@@ -1,0 +1,81 @@
+{
+  "model_type": "GradientBoostingClassifier",
+  "n_estimators": 100,
+  "training_accuracy": 1.0,
+  "testing_accuracy": 0.9298245614035088,
+  "n_features": 30,
+  "feature_names": [
+    "radius_mean",
+    "texture_mean",
+    "perimeter_mean",
+    "area_mean",
+    "smoothness_mean",
+    "compactness_mean",
+    "concavity_mean",
+    "concave points_mean",
+    "symmetry_mean",
+    "fractal_dimension_mean",
+    "radius_se",
+    "texture_se",
+    "perimeter_se",
+    "area_se",
+    "smoothness_se",
+    "compactness_se",
+    "concavity_se",
+    "concave points_se",
+    "symmetry_se",
+    "fractal_dimension_se",
+    "radius_worst",
+    "texture_worst",
+    "perimeter_worst",
+    "area_worst",
+    "smoothness_worst",
+    "compactness_worst",
+    "concavity_worst",
+    "concave points_worst",
+    "symmetry_worst",
+    "fractal_dimension_worst"
+  ],
+  "top_features": [
+    {
+      "feature": "perimeter_worst",
+      "importance": 0.7222165270666583
+    },
+    {
+      "feature": "concave points_worst",
+      "importance": 0.08964164678730725
+    },
+    {
+      "feature": "texture_mean",
+      "importance": 0.03341107299715399
+    },
+    {
+      "feature": "texture_worst",
+      "importance": 0.026316473217207228
+    },
+    {
+      "feature": "area_mean",
+      "importance": 0.02140604457672184
+    },
+    {
+      "feature": "smoothness_worst",
+      "importance": 0.01857001228809611
+    },
+    {
+      "feature": "area_worst",
+      "importance": 0.01385908554445805
+    },
+    {
+      "feature": "concavity_worst",
+      "importance": 0.01221894760547328
+    },
+    {
+      "feature": "smoothness_mean",
+      "importance": 0.009675861600045323
+    },
+    {
+      "feature": "texture_se",
+      "importance": 0.008526443607128668
+    }
+  ]
+}
