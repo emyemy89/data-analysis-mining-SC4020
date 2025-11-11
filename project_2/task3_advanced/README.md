@@ -5,6 +5,8 @@
 
 This project implements Task 3 of the SC4020 Data Mining course, building a complete healthcare application that applies insights from Tasks 1 (Apriori) and 2 (GSP).
 
+![Health Assistant Pro Screenshot](screenshot.png)
+
 ##  Quick Start
 
 **Windows:**
