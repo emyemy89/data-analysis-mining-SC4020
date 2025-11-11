@@ -12,6 +12,8 @@ const App = () => {
   const [allSymptoms, setAllSymptoms] = useState([]);
   const [cancerFeatures, setCancerFeatures] = useState(Array(30).fill(''));
   const [cancerPrediction, setCancerPrediction] = useState(null);
+  const [selectedDisease, setSelectedDisease] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchSymptoms();
@@ -122,6 +124,16 @@ const App = () => {
   const resetCancerForm = () => {
     setCancerFeatures(Array(30).fill(''));
     setCancerPrediction(null);
+  };
+
+  const openDiseaseModal = (disease) => {
+    setSelectedDisease(disease);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSelectedDisease(null);
   };
 
   return (
@@ -311,7 +323,8 @@ const App = () => {
                     {prediction.results?.map((result, index) => (
                       <div
                         key={result.disease}
-                        className="border-2 border-gray-200 rounded-xl p-4 hover:border-blue-300 transition-all"
+                        onClick={() => openDiseaseModal(result)}
+                        className="border-2 border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
@@ -323,10 +336,11 @@ const App = () => {
                               )}
                               <h3 className="font-bold text-gray-800">{result.disease}</h3>
                             </div>
-                            <p className="text-xs text-gray-500 mb-2">
+                            <p className="text-xs text-gray-500 mb-2 line-clamp-2">
                               {result.description?.substring(0, 100)}...
                             </p>
                           </div>
+                          <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 ml-2" />
                         </div>
 
                         <div className="mb-3">
@@ -342,22 +356,10 @@ const App = () => {
                           </div>
                         </div>
 
-                        {result.precautions && result.precautions.length > 0 && (
-                          <div className="mt-3 pt-3 border-t border-gray-200">
-                            <div className="flex items-center gap-1 mb-2">
-                              <Shield className="w-4 h-4 text-green-600" />
-                              <span className="text-xs font-semibold text-gray-700">Precautions:</span>
-                            </div>
-                            <ul className="space-y-1">
-                              {result.precautions.slice(0, 2).map((precaution, i) => (
-                                <li key={i} className="text-xs text-gray-600 flex items-start gap-1">
-                                  <ChevronRight className="w-3 h-3 text-green-500 mt-0.5 flex-shrink-0" />
-                                  <span>{precaution}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        )}
+                        <div className="text-xs text-blue-600 font-medium flex items-center gap-1">
+                          <Info className="w-3 h-3" />
+                          Click for full details
+                        </div>
                       </div>
                     ))}
 
@@ -569,6 +571,106 @@ const App = () => {
           <p>Health Assistant Pro © 2025 | SC4020 Task 3 Project | Educational Use Only</p>
         </div>
       </div>
+
+      {/* Disease Details Modal */}
+      {showModal && selectedDisease && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={closeModal}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-t-2xl">
+              <div className="flex items-start justify-between">
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Stethoscope className="w-6 h-6" />
+                    <h2 className="text-2xl font-bold">{selectedDisease.disease}</h2>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-medium">
+                      Confidence: {selectedDisease.confidence}%
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={closeModal}
+                  className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-all"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-6 space-y-6">
+              {/* Confidence Bar */}
+              <div>
+                <div className="flex justify-between text-sm text-gray-600 mb-2">
+                  <span className="font-semibold">Prediction Confidence</span>
+                  <span className="font-bold text-blue-600">{selectedDisease.confidence}%</span>
+                </div>
+                <div className="w-full bg-gray-200 rounded-full h-3">
+                  <div
+                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all"
+                    style={{ width: `${selectedDisease.confidence}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                <h3 className="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <Info className="w-5 h-5 text-blue-600" />
+                  Description
+                </h3>
+                <p className="text-gray-700 leading-relaxed">
+                  {selectedDisease.description || 'No description available.'}
+                </p>
+              </div>
+
+              {/* Precautions */}
+              {selectedDisease.precautions && selectedDisease.precautions.length > 0 && (
+                <div className="bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg">
+                  <h3 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <Shield className="w-5 h-5 text-green-600" />
+                    Recommended Precautions
+                  </h3>
+                  <ul className="space-y-2">
+                    {selectedDisease.precautions.map((precaution, i) => (
+                      <li key={i} className="flex items-start gap-3 text-gray-700">
+                        <div className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5 font-bold text-sm">
+                          {i + 1}
+                        </div>
+                        <span className="flex-1">{precaution}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Warning */}
+              <div className="bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-lg">
+                <h3 className="text-lg font-bold text-gray-800 mb-2 flex items-center gap-2">
+                  <AlertCircle className="w-5 h-5 text-yellow-600" />
+                  Important Notice
+                </h3>
+                <p className="text-gray-700 text-sm">
+                  This is an AI-generated prediction for informational purposes only. It is NOT a medical diagnosis. 
+                  Please consult with a qualified healthcare professional for proper diagnosis and treatment.
+                </p>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex gap-3 pt-4 border-t">
+                <button
+                  onClick={closeModal}
+                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
