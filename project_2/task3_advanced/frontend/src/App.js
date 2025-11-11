@@ -566,7 +566,7 @@ const App = () => {
       {/* Footer */}
       <div className="bg-white border-t mt-12">
         <div className="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-gray-600">
-          <p>Health Assistant Pro © 2024 | SC4020 Task 3 Project | Educational Use Only</p>
+          <p>Health Assistant Pro © 2025 | SC4020 Task 3 Project | Educational Use Only</p>
         </div>
       </div>
     </div>
