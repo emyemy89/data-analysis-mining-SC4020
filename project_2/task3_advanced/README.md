@@ -1,11 +1,11 @@
 
-# 🏥 Health Assistant Pro - SC4020 Task 3
+#  Health Assistant Pro - SC4020 Task 3
 
 > **AI-Powered Disease Prediction & Cancer Diagnosis System**
 
 This project implements Task 3 of the SC4020 Data Mining course, building a complete healthcare application that applies insights from Tasks 1 (Apriori) and 2 (GSP).
 
-## 🚀 Quick Start
+##  Quick Start
 
 **Windows:**
 ```cmd
@@ -27,11 +27,11 @@ docker-compose up --build
 
 Access at: `http://localhost:5000`
 
-**📖 Full documentation: See [DEPLOYMENT_README.md](DEPLOYMENT_README.md)**
+** Full documentation: See [DEPLOYMENT_README.md](DEPLOYMENT_README.md)**
 
 ---
 
-## ✨ What's Implemented
+## What's Implemented
 
 ### Task 3 Solution Features
 
@@ -65,7 +65,7 @@ Access at: `http://localhost:5000`
 
 ---
 
-## 📁 Project Files
+## Project Files
 
 ### Core Application Files
 - **app.py** - Flask REST API server (✅ Fixed all bugs)
@@ -89,27 +89,27 @@ Access at: `http://localhost:5000`
 
 ---
 
-## 🔧 Bug Fixes Applied
+## Bug Fixes Applied
 
 ### Critical Fixes
-1. ✅ **Fixed deprecated `@app.before_first_request`** - Updated to Flask 2.3+ compatible initialization
-2. ✅ **Removed invalid `pickle-mixin`** dependency - Not needed for scikit-learn
-3. ✅ **Added absolute path handling** - Prevents file not found errors
-4. ✅ **Added proper error handling** - Comprehensive try-catch with tracebacks
-5. ✅ **Fixed CORS configuration** - Allows frontend-backend communication
-6. ✅ **Added model directory creation** - Prevents missing directory errors
+1.  **Fixed deprecated `@app.before_first_request`** - Updated to Flask 2.3+ compatible initialization
+2.  **Removed invalid `pickle-mixin`** dependency - Not needed for scikit-learn
+3.  **Added absolute path handling** - Prevents file not found errors
+4.  **Added proper error handling** - Comprehensive try-catch with tracebacks
+5.  **Fixed CORS configuration** - Allows frontend-backend communication
+6.  **Added model directory creation** - Prevents missing directory errors
 
 ### Enhancements
-- ✅ Production-ready Docker configuration
-- ✅ Health check endpoints
-- ✅ Comprehensive logging
-- ✅ Environment variable support
-- ✅ Automated setup scripts
-- ✅ Complete test suite
+-  Production-ready Docker configuration
+-  Health check endpoints
+-  Comprehensive logging
+-  Environment variable support
+-  Automated setup scripts
+-  Complete test suite
 
 ---
 
-## 🎯 API Endpoints
+##  API Endpoints
 
 | Endpoint | Method | Purpose |
 |----------|--------|---------|
@@ -125,7 +125,7 @@ See [DEPLOYMENT_README.md](DEPLOYMENT_README.md) for full API documentation.
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ```bash
 # Run comprehensive API tests
@@ -137,7 +137,7 @@ curl http://localhost:5000/api/health
 
 ---
 
-## ⚠️ Important Notes
+##  Important Notes
 
 1. **Educational Purpose Only** - Not for actual medical diagnosis
 2. **No PHI** - Does not collect or store personal health information
@@ -146,7 +146,7 @@ curl http://localhost:5000/api/health
 
 ---
 
-## 📊 Model Performance
+##  Model Performance
 
 ### Disease Prediction
 - **Algorithm:** Random Forest
@@ -281,7 +281,4 @@ Use any valid analytical, machine-learning, deep-learning, or LLM-based approach
 | **3** | Working healthcare application | Applied decision logic | Demonstrates practical, justified use of mined knowledge |
 
 ---
-
-## Final Objective
-Deliver a **clinically meaningful**, **technically sound**, and **well-justified** healthcare application that demonstrates your ability to mine, interpret, and apply healthcare data insights from Tasks 1 and 2.
 
