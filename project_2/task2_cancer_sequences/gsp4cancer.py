@@ -5,7 +5,6 @@ from itertools import combinations, chain
 from collections import defaultdict
 
 #It is either "B" or "M", we will run GSP only on the patient who have the malignant disease or the one where they only have the benign disease for B
-CANCER_TYPE = "M"
 
 
 #Top K 
@@ -13,7 +12,6 @@ TOP_K = 10
 
 df = pd.read_csv("../data/raw/Cancer_Data.csv")
 
-df = df[df["diagnosis"] == CANCER_TYPE]
 
 """
 Sort the features by z-score in descending order and return the top K features
@@ -145,18 +143,30 @@ def gsp_dp(sequences, min_support, max_pattern_len):
     return freq_patterns
 
 #We convert them to frozenset so it is immutable and hashable
-patient_sequences = [
-    [frozenset(itemset) for itemset in sequence]
-    for sequence in patient_sequences
-] 
+# Split sequences for B and M
+patient_sequences_B = [
+    [frozenset(itemset) for itemset in seq]
+    for idx, seq in enumerate(patient_sequences)
+    if df.loc[idx, "diagnosis"] == "B"
+]
+
+patient_sequences_M = [
+    [frozenset(itemset) for itemset in seq]
+    for idx, seq in enumerate(patient_sequences)
+    if df.loc[idx, "diagnosis"] == "M"
+]
+
+
 
 min_support = 15  # pattern must appear in at least 2 patients
 max_pattern_len = 10
 
-frequent_patterns = gsp_dp(patient_sequences, min_support=min_support, max_pattern_len=max_pattern_len)
+frequent_patterns_M = gsp_dp(patient_sequences_M, min_support=min_support, max_pattern_len=max_pattern_len)
+frequent_patterns_B = gsp_dp(patient_sequences_B, min_support=min_support, max_pattern_len=max_pattern_len)
 
-# Print top patterns
-for k, patterns in frequent_patterns.items():
+# Print top patterns 
+"""
+for k, patterns in frequent_patterns_M.items():
     print(f"=== Frequent patterns of length {k} ===")
     for pat, sup in patterns.items():
         
@@ -165,5 +175,24 @@ for k, patterns in frequent_patterns.items():
             for pattern in pat
         )
         print(pretty_str, " -> ", sup)
+"""
 
+def compare_patterns(freq_B, freq_M):
+    comparison = []
+    all_patterns = set()
+    for d in [freq_B, freq_M]:
+        for k, patterns in d.items():
+            all_patterns.update(patterns.keys())
+    
+    for pat in all_patterns:
+        sup_B = sum(freq_B.get(len(pat), {}).get(pat, 0) for _ in [0])
+        sup_M = sum(freq_M.get(len(pat), {}).get(pat, 0) for _ in [0])
+        comparison.append((pat, sup_B, sup_M))
+    return comparison
 
+pattern_comparison = compare_patterns(frequent_patterns_B, frequent_patterns_M)
+
+print("\n=== Pattern comparison (B vs M) ===")
+for pat, sup_B, sup_M in pattern_comparison:
+    pretty_str = ", ".join("{" + ", ".join(itemset) + "}" for itemset in pat)
+    print(f"{pretty_str} | B: {sup_B}, M: {sup_M}")
