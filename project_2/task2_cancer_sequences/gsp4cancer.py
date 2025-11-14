@@ -177,6 +177,7 @@ for k, patterns in frequent_patterns_M.items():
         print(pretty_str, " -> ", sup)
 """
 
+DIFFERENCE_THRESHOLD = 30
 def compare_patterns(freq_B, freq_M):
     comparison = []
     all_patterns = set()
@@ -184,15 +185,32 @@ def compare_patterns(freq_B, freq_M):
         for k, patterns in d.items():
             all_patterns.update(patterns.keys())
     
+
     for pat in all_patterns:
         sup_B = sum(freq_B.get(len(pat), {}).get(pat, 0) for _ in [0])
         sup_M = sum(freq_M.get(len(pat), {}).get(pat, 0) for _ in [0])
-        comparison.append((pat, sup_B, sup_M))
+
+        if abs(sup_B-sup_M) >= DIFFERENCE_THRESHOLD : 
+            comparison.append((pat, sup_B, sup_M,abs(sup_B-sup_M)))
+
     return comparison
 
 pattern_comparison = compare_patterns(frequent_patterns_B, frequent_patterns_M)
 
+pattern_for_M = [pattern for pattern in pattern_comparison if pattern[2]>pattern[1]]
+pattern_for_B = [pattern for pattern in pattern_comparison if pattern[1]>pattern[2]]
+
+pattern_for_M = sorted(pattern_for_M, key=lambda x: x[-1],reverse=True)
+pattern_for_B = sorted(pattern_for_B, key=lambda x: x[-1],reverse=True)
+
+
 print("\n=== Pattern comparison (B vs M) ===")
-for pat, sup_B, sup_M in pattern_comparison:
+print("*** Patterns for M ****")
+for pat, sup_B, sup_M ,diff in pattern_for_M:
+    pretty_str = ", ".join("{" + ", ".join(itemset) + "}" for itemset in pat)
+    print(f"{pretty_str} | B: {sup_B}, M: {sup_M}")
+
+print("n*** Patterns for B ****")
+for pat, sup_B, sup_M, diff in pattern_for_B:
     pretty_str = ", ".join("{" + ", ".join(itemset) + "}" for itemset in pat)
     print(f"{pretty_str} | B: {sup_B}, M: {sup_M}")
