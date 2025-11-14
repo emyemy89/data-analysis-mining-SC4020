@@ -1,22 +1,17 @@
 import pandas as pd
 from sklearn.preprocessing import KBinsDiscretizer
 import numpy as np
-from itertools import combinations, chain
 from collections import defaultdict
 
-#It is either "B" or "M", we will run GSP only on the patient who have the malignant disease or the one where they only have the benign disease for B
-
-
-#Top K 
 TOP_K = 10
 
 df = pd.read_csv("../data/raw/Cancer_Data.csv")
 
 
-"""
-Sort the features by z-score in descending order and return the top K features
-"""
 def top_k_features_by_z(row,top_k):
+    """
+    Sort the features by z-score in descending order and return the top K features
+    """
     return row.sort_values(ascending=False).index.tolist()[:top_k]
 
 
@@ -53,7 +48,6 @@ for idx, row in df_zscore.iterrows():
     top_feats = ordered_features[idx]  # top-K features for this patient
     sequence = []
     i = 0
-    
     #We implement this logic to have feature ties in the same itemset
     while i < len(top_feats):
         current_itemset = set()
@@ -77,10 +71,6 @@ for idx, row in df_zscore.iterrows():
         i = j
     
     patient_sequences.append(sequence)    
-
-
-
-
 
 
 
@@ -164,21 +154,9 @@ max_pattern_len = 10
 frequent_patterns_M = gsp_dp(patient_sequences_M, min_support=min_support, max_pattern_len=max_pattern_len)
 frequent_patterns_B = gsp_dp(patient_sequences_B, min_support=min_support, max_pattern_len=max_pattern_len)
 
-# Print top patterns 
-"""
-for k, patterns in frequent_patterns_M.items():
-    print(f"=== Frequent patterns of length {k} ===")
-    for pat, sup in patterns.items():
-        
-        pretty_str = ", ".join(
-            "{" + ", ".join(pattern) + "}"
-            for pattern in pat
-        )
-        print(pretty_str, " -> ", sup)
-"""
 
-DIFFERENCE_THRESHOLD = 30
-def compare_patterns(freq_B, freq_M):
+DIFFERENCE_THRESHOLD = 15
+def compare_patterns(freq_B, freq_M,lenB,lenM):
     comparison = []
     all_patterns = set()
     for d in [freq_B, freq_M]:
@@ -191,14 +169,17 @@ def compare_patterns(freq_B, freq_M):
         sup_M = sum(freq_M.get(len(pat), {}).get(pat, 0) for _ in [0])
 
         if abs(sup_B-sup_M) >= DIFFERENCE_THRESHOLD : 
+            sup_B /= lenB
+            sup_M /= lenM
             comparison.append((pat, sup_B, sup_M,abs(sup_B-sup_M)))
-
     return comparison
 
-pattern_comparison = compare_patterns(frequent_patterns_B, frequent_patterns_M)
 
-pattern_for_M = [pattern for pattern in pattern_comparison if pattern[2]>pattern[1]]
-pattern_for_B = [pattern for pattern in pattern_comparison if pattern[1]>pattern[2]]
+pattern_comparison = compare_patterns(frequent_patterns_B, frequent_patterns_M,lenB=len(patient_sequences_B),lenM=len(patient_sequences_M))
+
+#We interest ourselves only for the pattern which length are > 1. 
+pattern_for_M = [pattern for pattern in pattern_comparison if pattern[2]>pattern[1] if len(pattern[0]) > 1]
+pattern_for_B = [pattern for pattern in pattern_comparison if pattern[1]>pattern[2] if len(pattern[0]) > 1]
 
 pattern_for_M = sorted(pattern_for_M, key=lambda x: x[-1],reverse=True)
 pattern_for_B = sorted(pattern_for_B, key=lambda x: x[-1],reverse=True)
@@ -208,9 +189,9 @@ print("\n=== Pattern comparison (B vs M) ===")
 print("*** Patterns for M ****")
 for pat, sup_B, sup_M ,diff in pattern_for_M:
     pretty_str = ", ".join("{" + ", ".join(itemset) + "}" for itemset in pat)
-    print(f"{pretty_str} | B: {sup_B}, M: {sup_M}")
+    print(f"{pretty_str} | B: {sup_B:.2f}, M: {sup_M:.2f}")
 
 print("n*** Patterns for B ****")
 for pat, sup_B, sup_M, diff in pattern_for_B:
     pretty_str = ", ".join("{" + ", ".join(itemset) + "}" for itemset in pat)
-    print(f"{pretty_str} | B: {sup_B}, M: {sup_M}")
+    print(f"{pretty_str} | B: {sup_B:.2f}, M: {sup_M:.2f}")
