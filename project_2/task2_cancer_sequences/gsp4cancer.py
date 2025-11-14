@@ -1,18 +1,19 @@
 import pandas as pd
 from sklearn.preprocessing import KBinsDiscretizer
 import numpy as np
+from itertools import combinations, chain
+from collections import defaultdict
 
-"""
-Next thing to do, is for each row, having the top K features, transform them into their values, and convert the numerical values into categorical values with KBinsDiscretizer (uniform / quantile / k-means) 
-
-
-"""
+#It is either "B" or "M", we will run GSP only on the patient who have the malignant disease or the one where they only have the benign disease for B
+CANCER_TYPE = "M"
 
 
 #Top K 
 TOP_K = 10
 
 df = pd.read_csv("../data/raw/Cancer_Data.csv")
+
+df = df[df["diagnosis"] == CANCER_TYPE]
 
 """
 Sort the features by z-score in descending order and return the top K features
@@ -28,6 +29,7 @@ features = df_zscore.columns
 
 for feature in features:
     df_zscore[feature] = abs((df[feature] - df[feature].mean()) / df[feature].std())
+
 
 #top_K features for each patient
 ordered_features = df_zscore.apply(top_k_features_by_z, axis=1, top_k=TOP_K)
@@ -76,5 +78,92 @@ for idx, row in df_zscore.iterrows():
         sequence.append(current_itemset)
         i = j
     
-    patient_sequences.append(sequence)
+    patient_sequences.append(sequence)    
+
+
+
+
+
+
+
+def gsp_dp(sequences, min_support, max_pattern_len):
+    """
+    Optimized GSP using prefix-based pruning for faster sequential pattern mining.
+    
+    sequences: list of list of items (e.g., patient sequences)
+    min_support: minimum number of sequences a pattern must appear in
+    max_pattern_len: maximum length of sequence to consider
+    """
+    
+    # Step 1: Count frequent 1-item patterns
+    freq_patterns = dict()
+    candidates = defaultdict(int)
+    
+    for seq in sequences:
+        for item in seq:
+            candidates[(item,)] += 1
+    
+    # Keep only frequent 1-item patterns
+    freq_patterns[1] = {k: v for k, v in candidates.items() if v >= min_support}
+    
+    print(f"Found {len(freq_patterns[1])} frequent 1-item patterns")
+    
+    k = 2
+    while k <= max_pattern_len and freq_patterns.get(k-1):
+        
+        print(f"\n=== Generating candidates of length {k} ===")
+        prev_freq = list(freq_patterns[k-1].keys())
+        candidates = defaultdict(int)
+        
+        # Prefix-based join: join only sequences with same first k-2 items
+        for i in range(len(prev_freq)):
+            for j in range(i+1, len(prev_freq)):
+                # Only join if first k-2 items are equal
+                if prev_freq[i][:-1] == prev_freq[j][:-1]:
+                    candidate = prev_freq[i] + (prev_freq[j][-1],)
+                    # Count support efficiently
+                    support = 0
+                    for seq in sequences:
+                        idx = 0
+                        for item in candidate:
+                            while idx < len(seq) and seq[idx] != item:
+                                idx += 1
+                            if idx == len(seq):
+                                break
+                            idx += 1
+                        else:
+                            support += 1
+
+                        
+                    if support >= min_support:
+                        candidates[candidate] = support
+        
+        freq_patterns[k] = dict(candidates)
+        print(f"Found {len(freq_patterns[k])} frequent patterns of length {k}")
+        k += 1
+        
+    return freq_patterns
+
+#We convert them to frozenset so it is immutable and hashable
+patient_sequences = [
+    [frozenset(itemset) for itemset in sequence]
+    for sequence in patient_sequences
+] 
+
+min_support = 15  # pattern must appear in at least 2 patients
+max_pattern_len = 10
+
+frequent_patterns = gsp_dp(patient_sequences, min_support=min_support, max_pattern_len=max_pattern_len)
+
+# Print top patterns
+for k, patterns in frequent_patterns.items():
+    print(f"=== Frequent patterns of length {k} ===")
+    for pat, sup in patterns.items():
+        
+        pretty_str = ", ".join(
+            "{" + ", ".join(pattern) + "}"
+            for pattern in pat
+        )
+        print(pretty_str, " -> ", sup)
+
 
