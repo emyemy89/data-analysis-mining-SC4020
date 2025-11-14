@@ -43,5 +43,3 @@ df_cleaned = pd.DataFrame({
     'Symptoms': [';'.join(t) for t in transactions]
 })
 df_cleaned.to_csv('./dataset_cleaned.csv', index=False)
-
-
