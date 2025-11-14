@@ -12,9 +12,6 @@ if len(transactions) < min_transactions:
     transactions = transactions * (min_transactions // len(transactions) + 1)
 
 
-# print(f"Total transactions: {len(transactions)}")
-# print("Example transaction:", transactions[0])
-
 def apriori (min_support, transactions):
     # 1. count individual items
     all_symptoms=set()
@@ -34,7 +31,6 @@ def apriori (min_support, transactions):
     for i, count in all_items.items():
       support= count/num_tx
       item_supp[i]=support
-      #print(i, count, supp) # to print the support
     
     # 3. iteratively build larger itemsets
     freq_items_L1={}
@@ -46,7 +42,6 @@ def apriori (min_support, transactions):
     n=2
     still_candidates= True
     while still_candidates:
-      #candidates= itertools.combinations(list(freq_items_Ln.keys()),n)
       prev_freq = list(freq_items_Ln.keys())
       candidates = []
       for a, b in itertools.combinations(prev_freq, 2):
@@ -63,7 +58,6 @@ def apriori (min_support, transactions):
         support=count/len(transactions)
         if support>= min_support:
           freq_items_Lnext[i]= support
-        #print(freq_items_Ln)
       freq_items_Ln = freq_items_Lnext
       all_frequent_items.update(freq_items_Ln)
 
@@ -73,7 +67,6 @@ def apriori (min_support, transactions):
       else: still_candidates= False
 
     # return list of frequent itemsets with support values
-    #return all_frequent_items
     return dict(sorted(all_frequent_items.items(), key=lambda x: (len(x[0]), -x[1]))) #return sorted itemsets instead
 
 def make_rules(frequent_itemsets, min_confidence):
@@ -93,10 +86,6 @@ def make_rules(frequent_itemsets, min_confidence):
 
 
 result = apriori(0.1, transactions)
-
-# print(f"Number of frequent itemsets: {len(result)}")
-# for items, support in result.items():
-#     print(set(items), ":", round(support, 3))
 
 rules = make_rules(result, min_confidence=0.7)
 print(f"Number of rules: {len(rules)}")

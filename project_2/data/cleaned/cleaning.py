@@ -38,15 +38,8 @@ print('are there no duplicates?'+str(all(len(t) == len(set(t)) for t in transact
 
 print(transactions[:5])
 
-
-# Now save the clean thing to a new csv file
 df_cleaned = pd.DataFrame({
     'Disease': df['Disease'],
     'Symptoms': [';'.join(t) for t in transactions]
 })
-
-# Save to CSV in the same directory
 df_cleaned.to_csv('./dataset_cleaned.csv', index=False)
-
-print("Cleaned dataset saved to data/cleaned/dataset_cleaned.csv")
-
