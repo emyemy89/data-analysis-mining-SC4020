@@ -1,4 +1,4 @@
-[screenshot img](screenshot.png)
+![screenshot img](screenshot.png)
 
 # How to run this app?
 
@@ -23,7 +23,9 @@
     ./start.sh
     ```
 6. **Access the App**: Go to the frontend directory and run 'npm start' to launch the React app. 
-    ```cd ./frontend
+    ```
+    cd ./frontend
+
     npm install
     npm start
     ```
