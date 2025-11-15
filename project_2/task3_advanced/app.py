@@ -7,6 +7,8 @@ from sklearn.preprocessing import LabelEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
 import pickle
 import os
+from pattern_detector import PatternDetector
+from apriori_symptom_mining import AprioriMiner
 
 app = Flask(__name__)
 CORS(app)
@@ -18,6 +20,8 @@ scaler = None
 label_encoder = None
 symptom_list = []
 disease_info = {}
+pattern_detector = None
+apriori_miner = None
 
 def load_datasets():
     """Load all CSV datasets"""
@@ -49,8 +53,8 @@ def load_datasets():
         return None, None, None, None, None
 
 def prepare_disease_model():
-    """Load pre-trained disease prediction model"""
-    global disease_model, label_encoder, symptom_list, disease_info
+    """Load pre-trained disease prediction model and Apriori rules"""
+    global disease_model, label_encoder, symptom_list, disease_info, apriori_miner
     
     try:
         # Load pre-trained model and artifacts
@@ -62,6 +66,14 @@ def prepare_disease_model():
         
         with open('models/symptom_list.pkl', 'rb') as f:
             symptom_list = pickle.load(f)
+        
+        # Load Apriori rules
+        apriori_miner = AprioriMiner()
+        if os.path.exists('models/apriori_rules.json'):
+            apriori_miner.load_rules('models/apriori_rules.json')
+            print("Apriori association rules loaded successfully!")
+        else:
+            print("Warning: Apriori rules not found. Run train-models-script.py first.")
         
         # Load disease info from CSV files
         _, _, descriptions_df, precautions_df, _ = load_datasets()
@@ -94,8 +106,8 @@ def prepare_disease_model():
         return False
 
 def prepare_cancer_model():
-    """Load pre-trained cancer diagnosis model"""
-    global cancer_model, scaler
+    """Load pre-trained cancer diagnosis model and initialize pattern detector"""
+    global cancer_model, scaler, pattern_detector
     
     try:
         # Load pre-trained model and artifacts
@@ -105,7 +117,15 @@ def prepare_cancer_model():
         with open('models/cancer_scaler.pkl', 'rb') as f:
             scaler = pickle.load(f)
         
-        print("Cancer prediction model loaded successfully!")
+        # Initialize and fit pattern detector
+        pattern_detector = PatternDetector()
+        
+        # Load cancer data to fit the discretizer
+        cancer_df = pd.read_csv('Cancer_Data.csv')
+        X_cancer = cancer_df.iloc[:, 2:-1].values  # 30 features
+        pattern_detector.fit(X_cancer)
+        
+        print("Cancer prediction model and pattern detector loaded successfully!")
         return True
     
     except Exception as e:
@@ -149,7 +169,7 @@ def get_symptoms():
 
 @app.route('/api/predict-disease', methods=['POST'])
 def predict_disease():
-    """Predict disease based on symptoms"""
+    """Predict disease based on symptoms with Apriori-enhanced scoring"""
     try:
         data = request.get_json()
         selected_symptoms = data.get('symptoms', [])
@@ -168,23 +188,62 @@ def predict_disease():
         top_5_indices = np.argsort(prediction_proba)[-5:][::-1]
         
         predictions = []
+        apriori_enhancements = []
+        
         for idx in top_5_indices:
             disease = label_encoder.inverse_transform([idx])[0]
-            confidence = float(prediction_proba[idx] * 100)
+            base_confidence = float(prediction_proba[idx] * 100)
             
-            if confidence > 0:
+            if base_confidence > 0:
+                # Apply Apriori pattern matching boost
+                apriori_score = 0.0
+                if apriori_miner:
+                    apriori_score = apriori_miner.get_disease_match_score(selected_symptoms, disease)
+                
+                # Smart confidence combination:
+                # - If Apriori score is higher, use weighted average (boost)
+                # - If base model is higher, keep base confidence with small Apriori validation bonus
+                apriori_percentage = apriori_score * 100
+                
+                if apriori_percentage > base_confidence:
+                    # Apriori patterns suggest higher confidence - boost it
+                    enhanced_confidence = (0.6 * base_confidence) + (0.4 * apriori_percentage)
+                else:
+                    # Base model is more confident - keep it, add small validation bonus
+                    validation_bonus = apriori_percentage * 0.1  # 10% of pattern score as bonus
+                    enhanced_confidence = min(base_confidence + validation_bonus, 100)
+                
                 pred_data = {
                     'disease': disease,
-                    'confidence': round(confidence, 2),
+                    'confidence': round(enhanced_confidence, 2),
+                    'base_confidence': round(base_confidence, 2),
+                    'apriori_boost': round(apriori_percentage, 2),
                     'description': disease_info.get(disease, {}).get('description', 'No description available'),
                     'precautions': disease_info.get(disease, {}).get('precautions', [])
                 }
                 predictions.append(pred_data)
+                
+                if apriori_score > 0:
+                    apriori_enhancements.append({
+                        'disease': disease,
+                        'pattern_match_score': round(apriori_score, 3)
+                    })
+        
+        # Re-sort by enhanced confidence
+        predictions.sort(key=lambda x: x['confidence'], reverse=True)
+        
+        # Get symptom suggestions from Apriori
+        symptom_suggestions = []
+        if apriori_miner:
+            symptom_suggestions = apriori_miner.get_symptom_suggestions(selected_symptoms, top_n=3)
         
         return jsonify({
             'success': True,
             'predictions': predictions,
-            'symptoms_provided': len(selected_symptoms)
+            'symptoms_provided': len(selected_symptoms),
+            'apriori_enhanced': True,
+            'symptom_suggestions': symptom_suggestions,
+            'apriori_enhancements': apriori_enhancements
         })
     
     except Exception as e:
@@ -192,10 +251,11 @@ def predict_disease():
 
 @app.route('/api/predict-cancer', methods=['POST'])
 def predict_cancer():
-    """Predict cancer diagnosis from features"""
+    """Predict cancer diagnosis from features with pattern analysis"""
     try:
         data = request.get_json()
         features = data.get('features', [])
+        include_patterns = data.get('include_patterns', True)
         
         if len(features) != 30:
             return jsonify({'error': 'Expected 30 features'}), 400
@@ -203,14 +263,14 @@ def predict_cancer():
         # Scale features
         features_scaled = scaler.transform([features])
         
-        # Predict
+        # Predict with ML model
         prediction = cancer_model.predict(features_scaled)[0]
         probability = cancer_model.predict_proba(features_scaled)[0]
         
         diagnosis = 'Malignant' if prediction == 1 else 'Benign'
         confidence = float(max(probability) * 100)
         
-        return jsonify({
+        response = {
             'success': True,
             'diagnosis': diagnosis,
             'confidence': round(confidence, 2),
@@ -219,7 +279,34 @@ def predict_cancer():
                 'benign': round(float(probability[0]) * 100, 2),
                 'malignant': round(float(probability[1]) * 100, 2)
             }
-        })
+        }
+        
+        # Add pattern analysis if requested
+        if include_patterns and pattern_detector is not None:
+            try:
+                pattern_results = pattern_detector.detect_patterns(features)
+                explanation = pattern_detector.explain_prediction(features, diagnosis)
+                
+                response['pattern_analysis'] = {
+                    'malignant_patterns_detected': len(pattern_results['malignant_patterns']),
+                    'benign_patterns_detected': len(pattern_results['benign_patterns']),
+                    'malignant_score': pattern_results['malignant_score'],
+                    'benign_score': pattern_results['benign_score'],
+                    'pattern_prediction': pattern_results['pattern_prediction'],
+                    'pattern_confidence': pattern_results['pattern_confidence'],
+                    'agreement_with_model': explanation['agreement'],
+                    'explanation': explanation['explanation']
+                }
+                
+                # Get top patterns for display
+                top_patterns = pattern_detector.get_top_patterns(features, n=3)
+                response['top_patterns'] = top_patterns
+                
+            except Exception as pe:
+                print(f"Pattern detection error: {pe}")
+                response['pattern_analysis'] = {'error': 'Pattern analysis unavailable'}
+        
+        return jsonify(response)
     
     except Exception as e:
         return jsonify({'error': str(e)}), 500

@@ -1,5 +1,6 @@
 """
 Train and save machine learning models for disease and cancer prediction
+Now includes Apriori association rule mining for enhanced disease prediction
 """
 
 import pandas as pd
@@ -10,6 +11,7 @@ from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import pickle
 import json
+from apriori_symptom_mining import AprioriMiner
 
 def train_disease_model():
     """Train disease prediction model"""
@@ -123,11 +125,42 @@ def train_disease_model():
     
     print("✓ Model info saved to models/disease_model_info.json")
     
+    # Mine association rules with Apriori
+    print("\n[10] Mining symptom association rules with Apriori...")
+    apriori_miner = AprioriMiner(min_support=0.05, min_confidence=0.6)
+    
+    # Get transactions for apriori
+    transactions = apriori_miner.get_transactions(df)
+    
+    # Mine frequent itemsets
+    frequent_itemsets = apriori_miner.mine_frequent_itemsets(transactions, max_length=4)
+    
+    # Generate association rules
+    rules = apriori_miner.generate_association_rules()
+    
+    # Mine disease-specific patterns
+    disease_patterns = apriori_miner.mine_disease_specific_rules(df)
+    
+    # Save apriori rules
+    apriori_miner.save_rules('models/apriori_rules.json')
+    
+    print(f"✓ Mined {len(rules)} association rules")
+    print(f"✓ Found patterns for {len(disease_patterns)} diseases")
+    
+    # Update model info with Apriori stats
+    model_info['apriori_rules_count'] = len(rules)
+    model_info['disease_patterns_count'] = len(disease_patterns)
+    model_info['apriori_enabled'] = True
+    
+    with open('models/disease_model_info.json', 'w') as f:
+        json.dump(model_info, f, indent=2)
+    
     print("\n" + "="*60)
     print("DISEASE MODEL TRAINING COMPLETE!")
+    print("WITH APRIORI ASSOCIATION RULE MINING")
     print("="*60)
     
-    return model, label_encoder, symptom_list
+    return model, label_encoder, symptom_list, apriori_miner
 
 def train_cancer_model():
     """Train cancer diagnosis model"""
@@ -266,8 +299,8 @@ def main():
     print("║" + " "*15 + "HEALTH ASSISTANT ML PIPELINE" + " "*15 + "║")
     print("╚" + "="*58 + "╝")
     
-    # Train disease model
-    disease_model, disease_encoder, symptoms = train_disease_model()
+    # Train disease model with Apriori
+    disease_model, disease_encoder, symptoms, apriori_miner = train_disease_model()
     
     # Train cancer model
     cancer_model, cancer_scaler, features = train_cancer_model()
