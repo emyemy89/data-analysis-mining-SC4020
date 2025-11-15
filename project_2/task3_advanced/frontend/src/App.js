@@ -240,55 +240,42 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+    <div className="min-h-screen bg-gray-50" style={{fontFamily: 'system-ui, -apple-system, sans-serif'}}>
       {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="bg-white border-b-2 border-gray-300">
+        <div className="max-w-7xl mx-auto px-4 py-5">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-blue-500 to-purple-600 p-2 rounded-xl">
-                <Activity className="w-8 h-8 text-white" />
+              <div className="bg-blue-600 p-2.5 rounded-lg" style={{transform: 'rotate(-2deg)'}}>
+                <Activity className="w-7 h-7 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Health Assistant Pro
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Medical Symptom Checker
                 </h1>
-                <p className="text-sm text-gray-500">AI-Powered Medical Analysis System</p>
+                <p className="text-sm text-gray-600">Quick diagnosis helper</p>
               </div>
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setActiveTab('predictor')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`px-4 py-2 rounded border-2 font-medium ${
                   activeTab === 'predictor'
-                    ? 'bg-blue-500 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-blue-600 text-white border-blue-700'
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
                 }`}
               >
-                <Stethoscope className="w-4 h-4 inline mr-2" />
-                Disease Predictor
+                Disease Checker
               </button>
               <button
                 onClick={() => setActiveTab('cancer')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                className={`px-4 py-2 rounded border-2 font-medium ${
                   activeTab === 'cancer'
-                    ? 'bg-blue-500 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    ? 'bg-blue-600 text-white border-blue-700'
+                    : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
                 }`}
               >
-                <Heart className="w-4 h-4 inline mr-2" />
-                Cancer Diagnosis
-              </button>
-              <button
-                onClick={() => setActiveTab('info')}
-                className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                  activeTab === 'info'
-                    ? 'bg-blue-500 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
-              >
-                <Info className="w-4 h-4 inline mr-2" />
-                About
+                Cancer Analysis
               </button>
             </div>
           </div>
@@ -300,44 +287,42 @@ const App = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Disease Prediction Interface */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl shadow-lg p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-xl font-bold text-gray-800 flex items-center gap-2">
-                    <Search className="w-5 h-5 text-blue-500" />
-                    Select Your Symptoms
+              <div className="bg-white border-2 border-gray-300 rounded-lg p-5">
+                <div className="flex items-center justify-between mb-5">
+                  <h2 className="text-lg font-bold text-gray-900">
+                    What symptoms do you have?
                   </h2>
-                  <span className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                  <span className="bg-gray-200 text-gray-700 px-2.5 py-1 rounded text-sm">
                     {selectedSymptoms.length} selected
                   </span>
                 </div>
 
                 <div className="relative mb-4">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="text"
-                    placeholder="Search symptoms..."
+                    placeholder="Type to search symptoms"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors"
+                    className="w-full px-3 py-2.5 border-2 border-gray-300 rounded focus:border-blue-500 focus:outline-none"
                   />
                 </div>
 
                 {selectedSymptoms.length > 0 && (
-                  <div className="mb-4 p-4 bg-blue-50 rounded-xl">
+                  <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm font-medium text-blue-900">Selected Symptoms:</span>
+                      <span className="text-sm font-semibold text-gray-800">Selected:</span>
                       <button
                         onClick={() => setSelectedSymptoms([])}
-                        className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                        className="text-xs text-gray-600 hover:text-gray-900 underline"
                       >
-                        Clear All
+                        clear all
                       </button>
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {selectedSymptoms.map(symptom => (
                         <span
                           key={symptom}
-                          className="bg-white px-3 py-1.5 rounded-lg text-sm font-medium text-gray-700 flex items-center gap-2 shadow-sm"
+                          className="bg-white border border-gray-300 px-2.5 py-1 rounded text-sm text-gray-800 flex items-center gap-1.5"
                         >
                           {symptom.replace(/_/g, ' ')}
                           <button
@@ -358,13 +343,13 @@ const App = () => {
                       <button
                         key={symptom}
                         onClick={() => toggleSymptom(symptom)}
-                        className={`p-3 rounded-xl text-left transition-all ${
+                        className={`p-2.5 rounded border-2 text-left transition-colors ${
                           selectedSymptoms.includes(symptom)
-                            ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md'
-                            : 'bg-gray-50 hover:bg-gray-100 text-gray-700'
+                            ? 'bg-blue-600 text-white border-blue-700'
+                            : 'bg-white hover:bg-gray-50 text-gray-700 border-gray-300'
                         }`}
                       >
-                        <span className="text-sm font-medium">
+                        <span className="text-sm">
                           {symptom.replace(/_/g, ' ')}
                         </span>
                       </button>
@@ -372,27 +357,24 @@ const App = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-3 mt-6">
+                <div className="flex gap-2 mt-5">
                   <button
                     onClick={predictDisease}
                     disabled={selectedSymptoms.length === 0 || loading}
-                    className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="flex-1 bg-blue-600 text-white py-2.5 rounded font-semibold hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 border-b-4 border-blue-800 disabled:border-gray-500"
                   >
                     {loading ? (
                       <>
-                        <Loader className="w-5 h-5 animate-spin" />
-                        Analyzing...
+                        <Loader className="w-4 h-4 animate-spin" />
+                        Checking...
                       </>
                     ) : (
-                      <>
-                        <Heart className="w-5 h-5" />
-                        Predict Disease
-                      </>
+                      'Check Symptoms'
                     )}
                   </button>
                   <button
                     onClick={resetForm}
-                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-all"
+                    className="px-5 py-2.5 bg-white border-2 border-gray-300 text-gray-700 rounded font-semibold hover:border-gray-400"
                   >
                     Reset
                   </button>
@@ -402,24 +384,21 @@ const App = () => {
 
             {/* Results Panel */}
             <div className="lg:col-span-1">
-              <div className="bg-white rounded-2xl shadow-lg p-6 sticky top-6">
-                <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <AlertCircle className="w-5 h-5 text-purple-500" />
-                  Prediction Results
+              <div className="bg-white border-2 border-gray-300 rounded-lg p-5 sticky top-6">
+                <h2 className="text-lg font-bold text-gray-900 mb-4 pb-2 border-b-2 border-gray-200">
+                  Results
                 </h2>
 
                 {!prediction ? (
-                  <div className="text-center py-12">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Stethoscope className="w-10 h-10 text-blue-500" />
-                    </div>
-                    <p className="text-gray-500 text-sm">
-                      Select symptoms and click "Predict Disease" to see results
+                  <div className="text-center py-10">
+                    <div className="text-5xl mb-3">🩺</div>
+                    <p className="text-gray-600 text-sm">
+                      Select symptoms and check to see possible conditions
                     </p>
                   </div>
                 ) : prediction.error ? (
-                  <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
-                    <p className="text-red-700 text-sm">{prediction.error}</p>
+                  <div className="bg-red-50 border-l-4 border-red-500 p-3">
+                    <p className="text-red-700 text-sm font-medium">{prediction.error}</p>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -464,50 +443,43 @@ const App = () => {
                       <div
                         key={result.disease}
                         onClick={() => openDiseaseModal(result)}
-                        className="border-2 border-gray-200 rounded-xl p-4 hover:border-blue-300 hover:shadow-lg transition-all cursor-pointer"
+                        className="border-2 border-gray-300 rounded p-3 hover:border-blue-500 hover:bg-gray-50 cursor-pointer"
                       >
                         <div className="flex items-start justify-between mb-2">
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               {index === 0 && (
-                                <span className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white text-xs px-2 py-0.5 rounded-full font-bold">
-                                  TOP
+                                <span className="bg-yellow-400 text-black text-xs px-1.5 py-0.5 rounded font-bold">
+                                  #1
                                 </span>
                               )}
-                              <h3 className="font-bold text-gray-800">{result.disease}</h3>
+                              <h3 className="font-bold text-gray-900">{result.disease}</h3>
                             </div>
-                            <p className="text-xs text-gray-500 mb-2 line-clamp-2">
+                            <p className="text-xs text-gray-600 mb-2 line-clamp-2">
                               {result.description?.substring(0, 100)}...
                             </p>
                           </div>
-                          <ChevronRight className="w-5 h-5 text-gray-400 flex-shrink-0 ml-2" />
+                          <span className="text-gray-400 text-sm ml-2">→</span>
                         </div>
 
-                        <div className="mb-3">
+                        <div className="mb-2">
                           <div className="flex justify-between text-xs text-gray-600 mb-1">
-                            <span>Confidence</span>
+                            <span>Match</span>
                             <span className="font-bold">{result.confidence}%</span>
                           </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
+                          <div className="w-full bg-gray-200 rounded h-2">
                             <div
-                              className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full transition-all"
+                              className="bg-blue-600 h-2 rounded"
                               style={{ width: `${result.confidence}%` }}
                             />
                           </div>
                         </div>
 
-                        <div className="text-xs text-blue-600 font-medium flex items-center gap-1">
-                          <Info className="w-3 h-3" />
-                          Click for full details
+                        <div className="text-xs text-blue-600 font-medium">
+                          Click for details
                         </div>
                       </div>
                     ))}
-                    </div>
-
-                    <div className="mt-4 p-3 bg-blue-50 rounded-xl">
-                      <p className="text-xs text-blue-900">
-                        <strong>Disclaimer:</strong> This is an AI prediction tool. Please consult a healthcare provider for accurate diagnosis.
-                      </p>
                     </div>
                   </div>
                 )}
@@ -601,7 +573,7 @@ const App = () => {
                 <button
                   onClick={predictCancer}
                   disabled={loading}
-                  className="flex-1 bg-gradient-to-r from-red-500 to-pink-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 bg-red-600 text-white py-3 rounded font-semibold hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-2 border-b-4 border-red-800 disabled:border-gray-500"
                 >
                   {loading ? (
                     <>
@@ -624,7 +596,7 @@ const App = () => {
               </div>
 
               {cancerPrediction && !cancerPrediction.error && (
-                <div className="mt-6 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl border-2 border-blue-200">
+                <div className="mt-6 p-5 bg-gray-50 rounded border-2 border-gray-300">
                   <h3 className="text-xl font-bold text-gray-800 mb-4">Diagnosis Result</h3>
                   
                   <div className={`p-4 rounded-lg mb-4 ${
@@ -759,12 +731,6 @@ const App = () => {
                       )}
                     </div>
                   )}
-
-                  <div className="mt-4 p-3 bg-yellow-50 rounded-lg border-2 border-yellow-200">
-                    <p className="text-xs text-yellow-800">
-                      ⚠️ This is an AI prediction tool. Always consult medical professionals for diagnosis.
-                    </p>
-                  </div>
                 </div>
               )}
 
@@ -813,16 +779,6 @@ const App = () => {
                   </div>
                 </div>
 
-                <div className="bg-red-50 border-2 border-red-200 rounded-xl p-4">
-                  <h3 className="text-xl font-semibold text-red-700 mb-2 flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
-                    Important Disclaimer
-                  </h3>
-                  <p className="text-red-800 text-sm leading-relaxed">
-                    This tool is for educational purposes only. It should NOT replace professional medical advice, diagnosis, or treatment. Always consult qualified healthcare providers.
-                  </p>
-                </div>
-
                 <div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-3">Technology Stack</h3>
                   <ul className="list-disc list-inside space-y-2 text-sm">
@@ -841,7 +797,7 @@ const App = () => {
       {/* Footer */}
       <div className="bg-white border-t mt-12">
         <div className="max-w-7xl mx-auto px-4 py-6 text-center text-sm text-gray-600">
-          <p>Health Assistant Pro © 2025 | Educational Use Only</p>
+          <p>Medical Symptom Checker © 2025</p>
         </div>
       </div>
 
@@ -850,7 +806,7 @@ const App = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={closeModal}>
           <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             {/* Modal Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-blue-500 to-purple-600 text-white p-6 rounded-t-2xl">
+            <div className="sticky top-0 bg-blue-600 text-white p-5 rounded-t-lg border-b-2 border-blue-700">
               <div className="flex items-start justify-between">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">
@@ -887,7 +843,7 @@ const App = () => {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-3">
                   <div
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-3 rounded-full transition-all"
+                    className="bg-blue-600 h-3 rounded"
                     style={{ width: `${selectedDisease.confidence}%` }}
                   />
                 </div>
@@ -947,7 +903,7 @@ const App = () => {
               <div className="flex gap-3 pt-4 border-t">
                 <button
                   onClick={closeModal}
-                  className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 text-white py-3 rounded-xl font-semibold hover:shadow-lg transition-all"
+                  className="flex-1 bg-blue-600 text-white py-3 rounded font-semibold hover:bg-blue-700 border-b-4 border-blue-800"
                 >
                   Close
                 </button>
